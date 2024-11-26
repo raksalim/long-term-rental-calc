@@ -2,6 +2,7 @@
 	"name": "long-term-rental-calc",
 	"version": "0.1.0",
 	"private": true,
+  "homepage": "https://raksalim.github.io/long-term-rental-calc",
 	"dependencies": {
 		"@emotion/react": "^11.13.5",
 		"@emotion/styled": "^11.13.5",

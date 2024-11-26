@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/long-term-rental-calc/static/css/main.f855e6bc.css",
+    "main.js": "/long-term-rental-calc/static/js/main.b7efb645.js",
+    "static/js/453.d56bffdd.chunk.js": "/long-term-rental-calc/static/js/453.d56bffdd.chunk.js",
+    "index.html": "/long-term-rental-calc/index.html",
+    "main.f855e6bc.css.map": "/long-term-rental-calc/static/css/main.f855e6bc.css.map",
+    "main.b7efb645.js.map": "/long-term-rental-calc/static/js/main.b7efb645.js.map",
+    "453.d56bffdd.chunk.js.map": "/long-term-rental-calc/static/js/453.d56bffdd.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f855e6bc.css",
+    "static/js/main.b7efb645.js"
+  ]
+}

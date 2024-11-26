@@ -15,6 +15,7 @@ import {
 	calculateMortgagePayment,
 	formatToDollar,
 } from '../utils/utils';
+import InputSlider from './InputSlider';
 
 const MortgageCalculator = () => {
 	const [houseValue, setHouseValue] = useState(350000);
@@ -75,7 +76,8 @@ const MortgageCalculator = () => {
 						<TableRow>
 							<TableCell>Category</TableCell>
 							<TableCell>Value</TableCell>
-							<TableCell width={'70%'}>Variable</TableCell>
+							<TableCell>Variable</TableCell>
+							<TableCell width={'70%'}></TableCell>
 						</TableRow>
 					</TableHead>
 					<TableRow>
@@ -102,6 +104,8 @@ const MortgageCalculator = () => {
 									type: 'number',
 								}}
 							/>
+						</TableCell>
+						<TableCell>
 							<Slider
 								defaultValue={houseValue}
 								value={
@@ -149,7 +153,10 @@ const MortgageCalculator = () => {
 									max: downPmtPercentMax,
 									type: 'number',
 								}}
-							/>
+							/>{' '}
+							%
+						</TableCell>
+						<TableCell>
 							<Slider
 								defaultValue={downPmtPercent}
 								value={
@@ -198,6 +205,8 @@ const MortgageCalculator = () => {
 									type: 'number',
 								}}
 							/>
+						</TableCell>
+						<TableCell>
 							<Slider
 								defaultValue={apr}
 								value={typeof apr === 'number' ? apr : aprMin}
@@ -231,6 +240,8 @@ const MortgageCalculator = () => {
 									type: 'number',
 								}}
 							/>
+						</TableCell>
+						<TableCell>
 							<Slider
 								defaultValue={numYearsTerm}
 								value={

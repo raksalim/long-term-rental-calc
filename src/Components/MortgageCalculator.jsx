@@ -14,12 +14,17 @@ import {
 	calculateDownPayment,
 	calculateMortgagePayment,
 	formatToDollar,
+	handleBlur,
+	handleInputChange,
+	handleSliderChange,
 } from '../utils/utils';
-import InputSlider from './InputSlider';
 
-const MortgageCalculator = () => {
-	const [houseValue, setHouseValue] = useState(350000);
-
+const MortgageCalculator = ({
+	houseValue,
+	setHouseValue,
+	mortgagePayment,
+	setMortgagePayment,
+}) => {
 	const [houseValSliderMin, setHouseValSliderMin] = useState(200000);
 	const [houseValSliderMax, setHouseValSliderMax] = useState(600000);
 
@@ -40,32 +45,31 @@ const MortgageCalculator = () => {
 	);
 
 	let loanAmount = houseValue - downPaymentAmount;
-	const [mortgageParment, setMortgagePayment] = useState(
-		calculateMortgagePayment(loanAmount, apr, numYearsTerm)
+
+	const [defaultPmiPercent, setDefaultPmiPercent] = useState(1.2);
+	const [pmiPercent, setPmiPercent] = useState(downPmtPercent < 20 ? 1 : 0);
+	const [pmiPercentMin, setPmiPercentMin] = useState(0.2);
+	const [pmiPercentMax, setPmiPercentMax] = useState(3);
+	const [pmiAmount, setPmiAmount] = useState(
+		(houseValue * (pmiPercent / 100)) / 12
 	);
 
-	const handleSliderChange = (event, newValue, setVal) => {
-		setVal(newValue);
-	};
-
-	const handleInputChange = (event, setVal) => {
-		setVal(event.target.value === '' ? 0 : Number(event.target.value));
-	};
-
-	const handleBlur = (val, setVal, valMin = 0, ValMax = 100) => {
-		if (val < valMin) {
-			setVal(valMin);
-		} else if (val > ValMax) {
-			setVal(ValMax);
-		}
-	};
-
 	useEffect(() => {
+		if (downPmtPercent < 20 && pmiPercent > 0) {
+			setPmiPercent(pmiPercent);
+		} else if (downPmtPercent < 20 && pmiPercent === 0) {
+			setPmiPercent(defaultPmiPercent);
+		} else {
+			setPmiPercent(0);
+		}
+		setPmiAmount((houseValue * (pmiPercent / 100)) / 12);
+		console.log(pmiAmount);
 		setDownPaymentAmount(calculateDownPayment(houseValue, downPmtPercent));
 		setMortgagePayment(
-			calculateMortgagePayment(loanAmount, apr, numYearsTerm)
+			calculateMortgagePayment(loanAmount, apr, numYearsTerm) + pmiAmount
 		);
-	}, [houseValue, downPmtPercent, apr, numYearsTerm]);
+		console.log(mortgagePayment);
+	}, [houseValue, downPmtPercent, apr, numYearsTerm, pmiPercent, pmiAmount]);
 
 	return (
 		<div>
@@ -77,7 +81,7 @@ const MortgageCalculator = () => {
 							<TableCell>Category</TableCell>
 							<TableCell>Value</TableCell>
 							<TableCell>Variable</TableCell>
-							<TableCell width={'70%'}></TableCell>
+							<TableCell width={'65%'}></TableCell>
 						</TableRow>
 					</TableHead>
 					<TableRow>
@@ -158,6 +162,7 @@ const MortgageCalculator = () => {
 						</TableCell>
 						<TableCell>
 							<Slider
+								color="secondary"
 								defaultValue={downPmtPercent}
 								value={
 									typeof downPmtPercent === 'number'
@@ -185,6 +190,7 @@ const MortgageCalculator = () => {
 							{formatToDollar(houseValue - downPaymentAmount)}
 						</TableCell>
 						<TableCell></TableCell>
+						<TableCell></TableCell>
 					</TableRow>
 					<TableRow>
 						<TableCell>Annual Interest Rate</TableCell>
@@ -208,6 +214,7 @@ const MortgageCalculator = () => {
 						</TableCell>
 						<TableCell>
 							<Slider
+								color="secondary"
 								defaultValue={apr}
 								value={typeof apr === 'number' ? apr : aprMin}
 								onChange={(event, newValue) => {
@@ -243,6 +250,7 @@ const MortgageCalculator = () => {
 						</TableCell>
 						<TableCell>
 							<Slider
+								color="secondary"
 								defaultValue={numYearsTerm}
 								value={
 									typeof numYearsTerm === 'number'
@@ -265,8 +273,54 @@ const MortgageCalculator = () => {
 						</TableCell>
 					</TableRow>
 					<TableRow>
+						<TableCell>PMI</TableCell>
+						<TableCell>{formatToDollar(pmiAmount)}</TableCell>
+						<TableCell>
+							<TextField
+								value={pmiPercent}
+								onChange={(e) => {
+									handleInputChange(e, setPmiPercent);
+								}}
+								onBlur={() => {
+									handleBlur(pmiPercent, setPmiPercent);
+								}}
+								inputProps={{
+									step: 5,
+									min: pmiPercentMin,
+									max: pmiPercentMax,
+									type: 'number',
+								}}
+							/>
+						</TableCell>
+						<TableCell>
+							<Slider
+								color="secondary"
+								defaultValue={pmiPercent}
+								value={
+									typeof pmiPercent === 'number'
+										? pmiPercent
+										: 1
+								}
+								onChange={(event, newValue) => {
+									handleSliderChange(
+										event,
+										newValue,
+										setPmiPercent
+									);
+									setDefaultPmiPercent(newValue);
+								}}
+								min={pmiPercentMin}
+								max={pmiPercentMax}
+								step={0.1}
+								marks
+								valueLabelDisplay="auto"
+							/>
+						</TableCell>
+					</TableRow>
+					<TableRow>
 						<TableCell>Payment Amount</TableCell>
-						<TableCell>{formatToDollar(mortgageParment)}</TableCell>
+						<TableCell>{formatToDollar(mortgagePayment)}</TableCell>
+						<TableCell></TableCell>
 						<TableCell></TableCell>
 					</TableRow>
 				</TableContainer>

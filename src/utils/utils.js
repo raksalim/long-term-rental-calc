@@ -16,10 +16,27 @@ export const calculateMortgagePayment = (
 ) => {
 	const monthlyInterestRate = annualInterestRate / 100 / 12;
 	const numberOfPayments = loanTermYears * 12;
+
 	return (
 		(loanAmount *
 			(monthlyInterestRate *
 				Math.pow(1 + monthlyInterestRate, numberOfPayments))) /
 		(Math.pow(1 + monthlyInterestRate, numberOfPayments) - 1)
 	);
+};
+
+export const handleSliderChange = (event, newValue, setVal) => {
+	setVal(newValue);
+};
+
+export const handleInputChange = (event, setVal) => {
+	setVal(event.target.value === '' ? 0 : Number(event.target.value));
+};
+
+export const handleBlur = (val, setVal, valMin = 0, ValMax = 100) => {
+	if (val < valMin) {
+		setVal(valMin);
+	} else if (val > ValMax) {
+		setVal(ValMax);
+	}
 };

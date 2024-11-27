@@ -1,15 +1,5 @@
 import React from 'react';
-import {
-	Container,
-	Input,
-	Slider,
-	Tab,
-	TableCell,
-	TableContainer,
-	TableHead,
-	TableRow,
-	TextField,
-} from '@mui/material';
+import { Input, Slider } from '@mui/material';
 
 const InputSlider = ({
 	value,
@@ -22,7 +12,7 @@ const InputSlider = ({
 	handleSliderChange,
 }) => {
 	return (
-		<TableCell>
+		<div>
 			<Input
 				value={value}
 				onChange={(e) => handleInputChange(e, setValue)}
@@ -46,7 +36,7 @@ const InputSlider = ({
 				marks
 				valueLabelDisplay="auto"
 			/>
-		</TableCell>
+		</div>
 	);
 };
 

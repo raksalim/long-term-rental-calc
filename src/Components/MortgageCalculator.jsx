@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import {
+	Accordion,
+	AccordionActions,
+	AccordionDetails,
+	AccordionSummary,
 	Container,
 	Input,
 	Slider,
@@ -83,7 +87,7 @@ const MortgageCalculator = ({
 
 	return (
 		<div>
-			<h1>Mortgage Calculator</h1>
+			<h5>Mortgage Calculator</h5>
 			<Container>
 				<TableContainer>
 					<TableHead>
@@ -103,17 +107,10 @@ const MortgageCalculator = ({
 									handleInputChange(e, setHouseValue);
 								}}
 								onBlur={() => {
-									handleBlur(
-										houseValue,
-										setHouseValue,
-										houseValSliderMin,
-										houseValSliderMax
-									);
+									handleBlur(houseValue, setHouseValue);
 								}}
 								inputProps={{
 									step: 10000,
-									min: houseValSliderMin,
-									max: houseValSliderMax,
 									type: 'number',
 								}}
 							/>
@@ -143,226 +140,279 @@ const MortgageCalculator = ({
 							/>
 						</TableCell>
 					</TableRow>
-					<TableRow>
-						<TableCell
-							onClick={() => {
-								setShowSlider(showSlider ? false : true);
-							}}
-						>
-							Down Payment
-						</TableCell>
-						<TableCell>
-							{formatToDollar(downPaymentAmount)}
-						</TableCell>
-						<TableCell>
-							<Input
-								value={downPmtPercent}
-								onChange={(e) => {
-									handleInputChange(e, setDownPmtPercent);
-								}}
-								onBlur={() => {
-									handleBlur(
-										downPmtPercent,
-										setDownPmtPercent,
-										downPmtPercentMin,
-										downPmtPercentMax
-									);
-								}}
-								inputProps={{
-									step: 1,
-									min: downPmtPercentMin,
-									max: downPmtPercentMax,
-									type: 'number',
-								}}
-							/>
-							%
-						</TableCell>
-					</TableRow>
-					{showSlider && (
-						<TableRow>
-							<TableCell colSpan={3}>
-								<Slider
-									color="secondary"
-									defaultValue={downPmtPercent}
-									value={
-										typeof downPmtPercent === 'number'
-											? downPmtPercent
-											: downPmtPercentMin
-									}
-									onChange={(event, newValue) => {
-										handleSliderChange(
-											event,
-											newValue,
-											setDownPmtPercent
+					<Accordion>
+						<AccordionSummary>
+							<div>
+								<p>
+									Down Payment {downPmtPercent}%:{' '}
+									{formatToDollar(downPaymentAmount)}
+								</p>
+								<p>
+									Mortgage Amount:{' '}
+									{formatToDollar(
+										houseValue - downPaymentAmount
+									)}
+								</p>
+								<p>Annual Interest Rate: {apr}%</p>
+								<p>Loan Term (Years): {numYearsTerm}</p>
+								<p>PMI: {formatToDollar(pmiAmount)}</p>
+								<p>
+									Payment Amount:{' '}
+									{formatToDollar(mortgagePayment)}
+								</p>
+							</div>
+						</AccordionSummary>
+						<AccordionDetails>
+							<TableRow>
+								<TableCell
+									onClick={() => {
+										setShowSlider(
+											showSlider ? false : true
 										);
 									}}
-									min={downPmtPercentMin}
-									max={downPmtPercentMax}
-									step={1}
-									marks
-									valueLabelDisplay="auto"
-								/>
-							</TableCell>
-						</TableRow>
-					)}
-					<TableRow>
-						<TableCell>Mortgage Amount</TableCell>
-						<TableCell>
-							{formatToDollar(houseValue - downPaymentAmount)}
-						</TableCell>
-						<TableCell></TableCell>
-						<TableCell></TableCell>
-					</TableRow>
-					<TableRow>
-						<TableCell>Annual Interest Rate</TableCell>
-						<TableCell>{apr}%</TableCell>
-						<TableCell>
-							<Input
-								value={apr}
-								onChange={(e) => {
-									handleInputChange(e, setApr);
-								}}
-								onBlur={() => {
-									handleBlur(apr, setApr, aprMin, aprMax);
-								}}
-								inputProps={{
-									step: 0.1,
-									min: aprMin,
-									max: aprMax,
-									type: 'number',
-								}}
-							/>
-						</TableCell>
-					</TableRow>
-					{showSlider && (
-						<TableRow>
-							<TableCell colSpan={3}>
-								<Slider
-									color="secondary"
-									defaultValue={apr}
-									value={
-										typeof apr === 'number' ? apr : aprMin
-									}
-									onChange={(event, newValue) => {
-										handleSliderChange(
-											event,
-											newValue,
-											setApr
-										);
-									}}
-									min={aprMin}
-									max={aprMax}
-									step={0.1}
-									marks
-									valueLabelDisplay="auto"
-								/>
-							</TableCell>
-						</TableRow>
-					)}
+								>
+									Down Payment
+								</TableCell>
+								<TableCell>
+									{formatToDollar(downPaymentAmount)}
+								</TableCell>
+								<TableCell>
+									<Input
+										value={downPmtPercent}
+										onChange={(e) => {
+											handleInputChange(
+												e,
+												setDownPmtPercent
+											);
+										}}
+										onBlur={() => {
+											handleBlur(
+												downPmtPercent,
+												setDownPmtPercent,
+												downPmtPercentMin,
+												downPmtPercentMax
+											);
+										}}
+										inputProps={{
+											step: 1,
+											min: downPmtPercentMin,
+											max: downPmtPercentMax,
+											type: 'number',
+										}}
+									/>
+									%
+								</TableCell>
+							</TableRow>
+							{showSlider && (
+								<TableRow>
+									<TableCell colSpan={3}>
+										<Slider
+											color="secondary"
+											defaultValue={downPmtPercent}
+											value={
+												typeof downPmtPercent ===
+												'number'
+													? downPmtPercent
+													: downPmtPercentMin
+											}
+											onChange={(event, newValue) => {
+												handleSliderChange(
+													event,
+													newValue,
+													setDownPmtPercent
+												);
+											}}
+											min={downPmtPercentMin}
+											max={downPmtPercentMax}
+											step={1}
+											marks
+											valueLabelDisplay="auto"
+										/>
+									</TableCell>
+								</TableRow>
+							)}
+							<TableRow>
+								<TableCell>Mortgage Amount</TableCell>
+								<TableCell>
+									{formatToDollar(
+										houseValue - downPaymentAmount
+									)}
+								</TableCell>
+								<TableCell></TableCell>
+								<TableCell></TableCell>
+							</TableRow>
+							<TableRow>
+								<TableCell>Annual Interest Rate</TableCell>
+								<TableCell>{apr}%</TableCell>
+								<TableCell>
+									<Input
+										value={apr}
+										onChange={(e) => {
+											handleInputChange(e, setApr);
+										}}
+										onBlur={() => {
+											handleBlur(
+												apr,
+												setApr,
+												aprMin,
+												aprMax
+											);
+										}}
+										inputProps={{
+											step: 0.1,
+											min: aprMin,
+											max: aprMax,
+											type: 'number',
+										}}
+									/>
+								</TableCell>
+							</TableRow>
+							{showSlider && (
+								<TableRow>
+									<TableCell colSpan={3}>
+										<Slider
+											color="secondary"
+											defaultValue={apr}
+											value={
+												typeof apr === 'number'
+													? apr
+													: aprMin
+											}
+											onChange={(event, newValue) => {
+												handleSliderChange(
+													event,
+													newValue,
+													setApr
+												);
+											}}
+											min={aprMin}
+											max={aprMax}
+											step={0.1}
+											marks
+											valueLabelDisplay="auto"
+										/>
+									</TableCell>
+								</TableRow>
+							)}
 
-					<TableRow>
-						<TableCell>Loan Term (Years)</TableCell>
-						<TableCell>{numYearsTerm}</TableCell>
-						<TableCell>
-							<TextField
-								value={numYearsTerm}
-								onChange={(e) => {
-									handleInputChange(e, setNumYearTerm);
-								}}
-								onBlur={() => {
-									handleBlur(numYearsTerm, setNumYearTerm);
-								}}
-								inputProps={{
-									step: 5,
-									min: numYearsTermMin,
-									max: numYearsTermMax,
-									type: 'number',
-								}}
-							/>
-						</TableCell>
-					</TableRow>
-					{showSlider && (
-						<TableRow>
-							<TableCell colSpan={3}>
-								<Slider
-									color="secondary"
-									defaultValue={numYearsTerm}
-									value={
-										typeof numYearsTerm === 'number'
-											? numYearsTerm
-											: 5
-									}
-									onChange={(event, newValue) => {
-										handleSliderChange(
-											event,
-											newValue,
-											setNumYearTerm
-										);
-									}}
-									min={numYearsTermMin}
-									max={numYearsTermMax}
-									step={5}
-									marks
-									valueLabelDisplay="auto"
-								/>
-							</TableCell>
-						</TableRow>
-					)}
-					<TableRow>
-						<TableCell>PMI</TableCell>
-						<TableCell>{formatToDollar(pmiAmount)}</TableCell>
-						<TableCell>
-							<TextField
-								value={pmiPercent}
-								onChange={(e) => {
-									handleInputChange(e, setPmiPercent);
-								}}
-								onBlur={() => {
-									handleBlur(pmiPercent, setPmiPercent);
-								}}
-								inputProps={{
-									step: 5,
-									min: pmiPercentMin,
-									max: pmiPercentMax,
-									type: 'number',
-								}}
-							/>
-						</TableCell>
-					</TableRow>
-					{showSlider && (
-						<TableRow>
-							<TableCell>
-								<Slider
-									color="secondary"
-									defaultValue={pmiPercent}
-									value={
-										typeof pmiPercent === 'number'
-											? pmiPercent
-											: 1
-									}
-									onChange={(event, newValue) => {
-										handleSliderChange(
-											event,
-											newValue,
-											setPmiPercent
-										);
-										setDefaultPmiPercent(newValue);
-									}}
-									min={pmiPercentMin}
-									max={pmiPercentMax}
-									step={0.1}
-									marks
-									valueLabelDisplay="auto"
-								/>
-							</TableCell>
-						</TableRow>
-					)}
-					<TableRow>
-						<TableCell>Payment Amount</TableCell>
-						<TableCell>{formatToDollar(mortgagePayment)}</TableCell>
-						<TableCell></TableCell>
-						<TableCell></TableCell>
-					</TableRow>
+							<TableRow>
+								<TableCell>Loan Term (Years)</TableCell>
+								<TableCell>{numYearsTerm}</TableCell>
+								<TableCell>
+									<TextField
+										value={numYearsTerm}
+										onChange={(e) => {
+											handleInputChange(
+												e,
+												setNumYearTerm
+											);
+										}}
+										onBlur={() => {
+											handleBlur(
+												numYearsTerm,
+												setNumYearTerm
+											);
+										}}
+										inputProps={{
+											step: 5,
+											min: numYearsTermMin,
+											max: numYearsTermMax,
+											type: 'number',
+										}}
+									/>
+								</TableCell>
+							</TableRow>
+							{showSlider && (
+								<TableRow>
+									<TableCell colSpan={3}>
+										<Slider
+											color="secondary"
+											defaultValue={numYearsTerm}
+											value={
+												typeof numYearsTerm === 'number'
+													? numYearsTerm
+													: 5
+											}
+											onChange={(event, newValue) => {
+												handleSliderChange(
+													event,
+													newValue,
+													setNumYearTerm
+												);
+											}}
+											min={numYearsTermMin}
+											max={numYearsTermMax}
+											step={5}
+											marks
+											valueLabelDisplay="auto"
+										/>
+									</TableCell>
+								</TableRow>
+							)}
+							<TableRow>
+								<TableCell>PMI</TableCell>
+								<TableCell>
+									{formatToDollar(pmiAmount)}
+								</TableCell>
+								<TableCell>
+									<TextField
+										value={pmiPercent}
+										onChange={(e) => {
+											handleInputChange(e, setPmiPercent);
+										}}
+										onBlur={() => {
+											handleBlur(
+												pmiPercent,
+												setPmiPercent
+											);
+										}}
+										inputProps={{
+											step: 5,
+											min: pmiPercentMin,
+											max: pmiPercentMax,
+											type: 'number',
+										}}
+									/>
+								</TableCell>
+							</TableRow>
+							{showSlider && (
+								<TableRow>
+									<TableCell colSpan={3}>
+										<Slider
+											color="secondary"
+											defaultValue={pmiPercent}
+											value={
+												typeof pmiPercent === 'number'
+													? pmiPercent
+													: 1
+											}
+											onChange={(event, newValue) => {
+												handleSliderChange(
+													event,
+													newValue,
+													setPmiPercent
+												);
+												setDefaultPmiPercent(newValue);
+											}}
+											min={pmiPercentMin}
+											max={pmiPercentMax}
+											step={0.1}
+											marks
+											valueLabelDisplay="auto"
+										/>
+									</TableCell>
+								</TableRow>
+							)}
+							<TableRow>
+								<TableCell>Payment Amount</TableCell>
+								<TableCell>
+									{formatToDollar(mortgagePayment)}
+								</TableCell>
+								<TableCell></TableCell>
+								<TableCell></TableCell>
+							</TableRow>
+						</AccordionDetails>
+					</Accordion>
 				</TableContainer>
 			</Container>
 		</div>

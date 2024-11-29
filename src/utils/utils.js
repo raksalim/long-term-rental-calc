@@ -33,7 +33,7 @@ export const handleInputChange = (event, setVal) => {
 	setVal(event.target.value === '' ? 0 : Number(event.target.value));
 };
 
-export const handleBlur = (val, setVal, valMin = 0, ValMax = 100) => {
+export const handleBlur = (val, setVal, valMin = 0, ValMax = 1000000) => {
 	if (val < valMin) {
 		setVal(valMin);
 	} else if (val > ValMax) {
